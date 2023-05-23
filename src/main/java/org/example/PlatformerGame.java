@@ -12,12 +12,6 @@ public class PlatformerGame extends GameApplication {
         settings.setTitle("Platformer Game");
     }
 
-    @Override
-    protected void initGame() {
-        FXGL.getGameWorld().addEntityFactory(new GameFactory());
-        FXGL.setLevelFromMap("level1_map.tmx");
-        FXGL.getGameScene().setBackgroundRepeat("background/forest.png");
-    }
 
     public static void main(String[] args) {
         launch(args);
