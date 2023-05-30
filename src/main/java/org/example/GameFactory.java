@@ -48,7 +48,7 @@ public class GameFactory implements EntityFactory {
     public Entity newPlayer(SpawnData data) {
         return FXGL.entityBuilder(data)
                 .type(EntityType.PLAYER)
-                .view("player.png")
+                .with(new PlayerComponent())
                 .build();
         }
     }
