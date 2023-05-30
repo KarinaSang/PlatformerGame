@@ -53,6 +53,14 @@ public class GameFactory implements EntityFactory {
                 .build();
     }
 
+    @Spawns("player")
+    public Entity newPlayer(SpawnData data) {
+        return FXGL.entityBuilder(data)
+                .type(EntityType.PLAYER)
+                .with(new PlayerComponent())
+                .build();
+    }
+
 
 
 }
