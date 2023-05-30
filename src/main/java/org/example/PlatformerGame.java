@@ -6,6 +6,10 @@ import com.almasb.fxgl.dsl.FXGL;
 
 public class PlatformerGame extends GameApplication {
     @Override
+    protected void initGame() {
+        FXGL.getGameWorld().addEntityFactory(new GameFactory());
+        FXGL.setLevelFromMap("level1_map.tmx");
+    }
     protected void initSettings(GameSettings settings) {
         settings.setWidth(30*32);
         settings.setHeight(20*32);
