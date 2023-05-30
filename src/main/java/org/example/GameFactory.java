@@ -4,6 +4,8 @@ import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.EntityFactory;
 import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.Spawns;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 public class GameFactory implements EntityFactory {
 
@@ -16,8 +18,11 @@ public class GameFactory implements EntityFactory {
 
     @Spawns("coin")
     public Entity newCoin(SpawnData data) {
+        int width = data.get("width");
+
         return FXGL.entityBuilder(data)
                 .type(EntityType.COIN)
+                .view(new Circle(width/2, width/2, width/2, Color.GOLD))
                 .build();
     }
     @Spawns("door")
@@ -39,4 +44,12 @@ public class GameFactory implements EntityFactory {
                 .type(EntityType.RIVER)
                 .build();
     }
-}
+    @Spawns("player")
+    public Entity newPlayer(SpawnData data) {
+        return FXGL.entityBuilder(data)
+                .type(EntityType.PLAYER)
+                .view("player.png")
+                .build();
+        }
+    }
+
