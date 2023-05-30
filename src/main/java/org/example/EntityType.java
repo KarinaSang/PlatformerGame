@@ -1,5 +1,5 @@
 package org.example;
 
 public enum EntityType {
-    PLATFORM, RIVER, COIN, BOMB
+    PLATFORM, RIVER, COIN, BOMB, PLAYER
 }
