@@ -2,15 +2,21 @@ package org.example;
 
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.component.Component;
+import com.almasb.fxgl.entity.component.Required;
+import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.AnimationChannel;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
 
+@Required(PhysicsComponent.class)
 public class PlayerComponent extends Component {
     private AnimatedTexture texture;
     private AnimationChannel playerIdle;
     private AnimationChannel playerWalk;
+
+
+    private PhysicsComponent physics;
 
     public PlayerComponent() {
         Image image = FXGL.image("player.png");
@@ -20,10 +26,39 @@ public class PlayerComponent extends Component {
         texture.loop();
 
         }
+
+    public void left() {
+        physics.setVelocityX(-150);
+    }
+
+    public void right() {
+        physics.setVelocityX(150);
+    }
+
+    public void stop() {
+        physics.setVelocityX(0);
+    }
+
+    public void jump() {
+        physics.setVelocityY(-150);
+    }
+    @Override
+    public void onUpdate(double tpf) {
+        if (physics.isMovingX()) {
+            if (texture.getAnimationChannel() != playerWalk) {
+                texture.loopAnimationChannel(playerWalk);
+            }
+        }
+            else {
+                texture.loopAnimationChannel(playerIdle);
+        }
+    }
     @Override
     public void onAdded() {
         entity.getViewComponent().addChild(texture);
     }
 }
+
+
 
 
