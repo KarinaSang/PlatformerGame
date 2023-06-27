@@ -6,6 +6,10 @@ import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.input.UserAction;
 import javafx.scene.input.KeyCode;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+
+import java.util.Map;
 
 public class PlatformerGame extends GameApplication {
     private Entity player;
@@ -52,7 +56,7 @@ public class PlatformerGame extends GameApplication {
             }, KeyCode.D);
         FXGL.getInput().addAction(new UserAction("jump") {
                  @Override
-                 protected void onAction() {
+                 protected void onActionBegin() {
                     player.getComponent(PlayerComponent.class).jump();
                  }
 
@@ -65,5 +69,48 @@ public class PlatformerGame extends GameApplication {
     }
     public static void main(String[] args) {
         launch(args);
+    }
+
+    @Override
+    protected void initPhysics() {
+        FXGL.onCollisionBegin(EntityType.PLAYER, EntityType.COIN, (player, coin) -> {
+            coin.removeFromWorld();
+            FXGL.inc("score", +10);
+        });
+    }
+
+    @Override
+    protected void initGameVars(Map<String, Object> vars) {
+        vars.put("level", 1);
+        vars.put("levelTime", 0.0);
+        vars.put("score", 0);
+    }
+
+    @Override
+    protected void initUI() {
+        Text scoreText = new Text("Score: ");
+        scoreText.setFont(new Font(30));
+        Text score = new Text();
+        score.textProperty().bind(FXGL.getip("score").asString());
+        score.setFont(new Font(30));
+
+        FXGL.addUINode(scoreText, 30, 50);
+        FXGL.addUINode(score, 120, 50);
+    }
+
+    private void onPlayerDied() {
+        System.out.println("Hey, you died");
+        FXGL.getDialogService().showMessageBox("You died.", () -> {
+                FXGL.getGameController().exit();
+        });
+    }
+
+    @Override
+    protected void onUpdate(double tpf){
+        FXGL.inc("levelTime", tpf);
+
+        if (player.getY() > FXGL.getAppHeight()) {
+            onPlayerDied();
+        }
     }
 }
