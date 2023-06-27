@@ -6,10 +6,49 @@ import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.input.UserAction;
 import javafx.scene.input.KeyCode;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+
+import java.util.Map;
 
 public class PlatformerGame extends GameApplication {
     private Entity player;
+    private void onPlayerDied() {
+        System.out.println("u suck");
+        FXGL.getDialogService().showMessageBox("u died loser", () -> {
+            FXGL.getGameController().exit();
+        });
+    }
     @Override
+    protected void onUpdate(double tpf) {
+        FXGL.inc("levelTime", tpf);
+
+        if (player.getY() > FXGL.getAppHeight()) {
+            onPlayerDied();
+        }
+    }
+    protected void initUI() {
+        Text scoreText = new Text("Score");
+        scoreText.setFont(new Font(30));
+        Text score = new Text();
+        score.textProperty().bind(FXGL.getip("score").asString());
+        score.setFont(new Font(30));
+
+        FXGL.addUINode(scoreText, 30, 50);
+        FXGL.addUINode(score, 120, 50);
+    }
+    protected void initGameVars(Map<String, Object> vars) {
+        vars.put("level", 1);
+        vars.put("levelTime", 0.0);
+        vars.put("score",0);
+    }
+    protected void initPhysics() {
+        FXGL.onCollisionBegin(EntityType.PLAYER, EntityType.COIN, (player, coin) -> {
+            //FXGL.getGameWorld().removeEntity(coin);
+            coin.removeFromWorld();
+            FXGL.inc("score", +10);
+        });
+    }
     protected void initInput(){
         FXGL.getInput().addAction(new UserAction("left"){
             @Override
@@ -35,7 +74,7 @@ public class PlatformerGame extends GameApplication {
 
         FXGL.getInput().addAction(new UserAction("jump"){
             @Override
-            protected void onAction(){
+            protected void onActionBegin(){
                 player.getComponent(PlayerComponent.class).jump();
             }
 

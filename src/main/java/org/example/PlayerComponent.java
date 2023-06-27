@@ -13,6 +13,7 @@ public class PlayerComponent extends Component {
     private AnimationChannel playerIdle;
     private AnimationChannel playerWalk;
     private PhysicsComponent physics;
+    private int jumps = 1;
 
     public PlayerComponent() {
         Image image = FXGL.image("player.png");
@@ -25,16 +26,27 @@ public class PlayerComponent extends Component {
     }
 
     public void left(){
+        entity.setScaleX(-1);
         physics.setVelocityX(-150);
     }
     public void right(){
+        entity.setScaleX(1);
         physics.setVelocityX(150);
     }
     public void stop(){
         physics.setVelocityX(0);
     }
     public void jump(){
+        if (physics.isOnGround()) {
+            jumps = 1;
+        }
+
+        if (jumps == 0) {
+            return;
+        }
+
         physics.setVelocityY(-300);
+        jumps --;
     }
 
 
